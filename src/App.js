@@ -15,7 +15,8 @@ import {
   TextInput,
   Button,
   ScrollView,
-  Keyboard
+  Keyboard,
+  Clipboard
 } from "react-native";
 
 type Props = {};
@@ -28,10 +29,16 @@ export default class App extends Component<Props> {
     };
     translate = this.translate.bind(this);
     handleChange = this.handleChange.bind(this);
+    copyToClipboard = this.copyToClipboard.bind(this);
   }
 
   handleChange = text => {
     this.setState({ text: text });
+  };
+
+  copyToClipboard = async () => {
+    let clipboardContent = await Clipboard.setString(this.state.submission);
+    alert("Copied to clipboard!");
   };
 
   translate = () => {
@@ -45,21 +52,23 @@ export default class App extends Component<Props> {
       result.push(restOfWord);
     });
     let newSentence = result.join(" ");
-    this.setState({ submission: newSentence });
+    if (newSentence !== "ay") {
+      this.setState({ submission: newSentence });
+    }
   };
 
   render() {
     return (
       <View style={styles.container}>
+        <Text style={styles.title}>Pig Latin</Text>
         <TextInput
+          style={styles.inputForm}
           placeholder="Type here to translate!"
           multiline={true}
-          numberOfLines={10}
+          numberOfLines={5}
           onChangeText={this.handleChange}
         />
-        <Text style={styles.instructions}>Pig Latin</Text>
         <Text>{this.state.submission}</Text>
-        <Text> {this.state.text}</Text>
         <Button
           title="translate!"
           onPress={() => {
@@ -67,6 +76,7 @@ export default class App extends Component<Props> {
             translate();
           }}
         />
+        <Button title="copy!" onPress={() => this.copyToClipboard()} />
       </View>
     );
   }
@@ -74,8 +84,11 @@ export default class App extends Component<Props> {
 
 const styles = StyleSheet.create({
   inputForm: {
-    flex: 1,
-    backgroundColor: "black"
+    flex: 3,
+    borderRadius: 10,
+    width: 300,
+    borderWidth: 2,
+    borderColor: "#333333"
   },
   container: {
     flex: 1,
@@ -83,14 +96,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F5FCFF"
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
-  },
-  instructions: {
+  title: {
+    fontSize: 90,
+    flex: 1,
     textAlign: "center",
     color: "#333333",
     marginBottom: 5
+  },
+  submission: {
+    flex: 2,
+    backgroundColor: "#F5FCFF",
+    alignItems: "center"
   }
 });
