@@ -18,10 +18,6 @@ import {
   Keyboard
 } from "react-native";
 
-import Form from "./Components/Form.js";
-import Submission from "./Components/Button.js";
-import console from "console";
-
 type Props = {};
 export default class App extends Component<Props> {
   constructor(props) {
@@ -38,7 +34,8 @@ export default class App extends Component<Props> {
     this.setState({ text: text });
   };
 
-  translate = input => {
+  translate = () => {
+    let input = this.state.text.slice();
     let result = [];
     let translation = input.split(" ").map(word => {
       let restOfWord = word.slice(1, word.length);
@@ -47,8 +44,8 @@ export default class App extends Component<Props> {
       restOfWord += "ay";
       result.push(restOfWord);
     });
-    result = result.join(" ");
-    this.setState({ submission: result });
+    let newSentence = result.join(" ");
+    this.setState({ submission: newSentence });
   };
 
   render() {
@@ -65,9 +62,9 @@ export default class App extends Component<Props> {
         <Text> {this.state.text}</Text>
         <Button
           title="translate!"
-          onPress={text => {
+          onPress={() => {
             Keyboard.dismiss();
-            translate(text);
+            translate();
           }}
         />
       </View>
