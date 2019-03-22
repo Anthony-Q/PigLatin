@@ -28,14 +28,14 @@ export default class App extends Component<Props> {
     super(props);
     this.state = {
       submission: "",
-      textInputValue: ""
+      text: ""
     };
     translate = this.translate.bind(this);
     handleChange = this.handleChange.bind(this);
   }
 
   handleChange = text => {
-    this.setState({ textInputValue: text });
+    this.setState({ text: text });
   };
 
   translate = input => {
@@ -48,10 +48,7 @@ export default class App extends Component<Props> {
       result.push(restOfWord);
     });
     result = result.join(" ");
-    this.setState({ submission: result }, () => {
-      console.log("submission", this.state.submission);
-    });
-    Keyboard.dismiss();
+    this.setState({ submission: result });
   };
 
   render() {
@@ -65,7 +62,14 @@ export default class App extends Component<Props> {
         />
         <Text style={styles.instructions}>Pig Latin</Text>
         <Text>{this.state.submission}</Text>
-        <Button title="translate" onPress={text => translate(text)} />
+        <Text> {this.state.text}</Text>
+        <Button
+          title="translate!"
+          onPress={text => {
+            Keyboard.dismiss();
+            translate(text);
+          }}
+        />
       </View>
     );
   }
